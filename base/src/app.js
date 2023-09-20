@@ -4,15 +4,26 @@ async function loadRecepies() {
     const data = await responce.json();
     
     main.replaceChildren();
-
+    
     for (const recipe in data) {
         main.appendChild(createRecipePreview(data[recipe].name ,data[recipe].img, data[recipe]._id))
     };      
 };
 
+function onLoad(){
+    const guestNav = document.getElementById("guest");
+    const userNav = document.getElementById("user")
+    const userToken = localStorage.getItem("accessToken");
+    if(userToken === null){
+        guestNav.style.display = "inline";
+    };
+    console.log(userToken);
+}
+
 window.addEventListener('load', async () => {
-    const main = document.querySelector('main');
     const recipes = await loadRecepies();
+    const navBar = document.querySelectorAll("nav a");
+    onLoad();
 });
 
 function createRecipePreview (recipeName, src, id){
@@ -135,3 +146,8 @@ function createFullViewArticle(dataObj){
 
     return fullViewArticle;
 };
+
+function createBtn(){
+    
+}
+
