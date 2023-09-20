@@ -1,5 +1,8 @@
+import { logOutFn } from "./logout.js";
+
 async function loadRecepies() {
-    const responce = await fetch('http://localhost:3030/jsonstore/cookbook/recipes');
+    //const responce = await fetch('http://localhost:3030/jsonstore/cookbook/recipes');
+    const responce = await fetch('http://localhost:3030/data/recipes?select=_id%2Cname%2Cimg');
     const main = document.querySelector('main');
     const data = await responce.json();
     
@@ -13,10 +16,16 @@ async function loadRecepies() {
 function onLoad(){
     const guestNav = document.getElementById("guest");
     const userNav = document.getElementById("user")
-    const userToken = localStorage.getItem("accessToken");
+    const userToken = sessionStorage.getItem("accessToken");
     if(userToken === null){
         guestNav.style.display = "inline";
-    };
+        userNav.style.display = "none";
+    }else if (userToken){
+        userNav.style.display = "inline";
+        guestNav.style.display = "none";
+    }
+    const logOutBtn = document.getElementById("logoutBtn");
+    logOutBtn.addEventListener("click", logOutFn)
     console.log(userToken);
 }
 
@@ -53,8 +62,8 @@ function createRecipePreview (recipeName, src, id){
 async function getFullView(event){
     const target = event.currentTarget;
     const recipeId = target.id;
+    //console.log(recipeId);
     const moreInfoData = await getMoreInfo(recipeId);
-    console.log(target);
 
 
     const fullViewArticle = createFullViewArticle(moreInfoData);
@@ -68,14 +77,16 @@ async function getMoreInfo(id){
     let preparationArr = [];
     let imgSrc = '';
     let recipeName = '';
-    await fetch(`http://localhost:3030/jsonstore/cookbook/details/${id}`)
+    //console.log(`http://localhost:3030/data/recipes/${id}`);
+    await fetch(`http://localhost:3030/data/recipes/${id}`)
     .then(responce => responce.json())
-    .then(data => {
-        imgSrc = data.img;
-        ingredientsArr = data.ingredients;
-        preparationArr = data.steps;
-        recipeName = data.name;
-    })
+     .then(data => {
+         //onsole.log(data);
+         imgSrc = data.img;
+         ingredientsArr = data.ingredients;
+         preparationArr = data.steps;
+         recipeName = data.name;
+     })
 
     return {
         recipeName,
