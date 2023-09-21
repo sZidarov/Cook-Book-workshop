@@ -10,13 +10,14 @@ async function sendRecipe (event){
     const formData = new FormData(newRecipeForm);
     const url = "http://localhost:3030/data/recipes";
     const ingredients = formData.get("ingredients").split("\n");
-    const preparation = formData.get("steps").split("\n");
+    const steps = formData.get("steps").split("\n");
     const body = JSON.stringify({
         "name": formData.get("name"),
         "img": formData.get("img"),
         ingredients,
-        preparation,
+        steps,
     })
+
     const request = await fetch(url, {
         method: "POST",
         headers: {
@@ -25,5 +26,12 @@ async function sendRecipe (event){
         },
         body
     });
-    
+    try {
+       if (request.status === false){
+        throw new Error(request.message)
+       }
+       window.location = "index.html"     
+    } catch (error) {
+        alert(error.message)
+    }
 }

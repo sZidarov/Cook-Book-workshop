@@ -26,7 +26,7 @@ function onLoad(){
     }
     const logOutBtn = document.getElementById("logoutBtn");
     logOutBtn.addEventListener("click", logOutFn)
-    console.log(userToken);
+    //console.log(userToken);
 }
 
 window.addEventListener('load', async () => {
@@ -81,7 +81,7 @@ async function getMoreInfo(id){
     await fetch(`http://localhost:3030/data/recipes/${id}`)
     .then(responce => responce.json())
      .then(data => {
-         //onsole.log(data);
+         console.log(data);
          imgSrc = data.img;
          ingredientsArr = data.ingredients;
          preparationArr = data.steps;
