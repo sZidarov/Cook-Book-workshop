@@ -30,6 +30,7 @@ async function logInFn(event) {
             throw new Error(userToken.message);
         }
         sessionStorage.setItem("accessToken", userToken.accessToken);
+        sessionStorage.setItem("loggedUserId", userToken._id);
         //console.log(userToken);
     
         window.location = "index.html"

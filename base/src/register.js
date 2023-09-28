@@ -25,13 +25,14 @@ async function registerFn (event){
             headers: {"Content-Type": "application/json"},
             body,
         });
-        console.log(request)
+        //console.log(request)
         const responce = await request.json();
         console.log(responce);
         if(request.status !==  200){
             throw new Error(responce.message);
         }
         sessionStorage.setItem("accessToken", responce.accessToken);
+        sessionStorage.setItem("loggedUserId", responce._id);
         window.location="index.html";
     } catch (error) {
         alert(error.message)

@@ -1,3 +1,4 @@
+import { deleteRecipeFn, editRecipeFn } from "./editRecipe.js";
 import { logOutFn } from "./logout.js";
 
 async function loadRecepies() {
@@ -9,6 +10,7 @@ async function loadRecepies() {
     main.replaceChildren();
     
     for (const recipe in data) {
+        //console.log(data[recipe]);
         main.appendChild(createRecipePreview(data[recipe].name ,data[recipe].img, data[recipe]._id))
     };      
 };
@@ -25,11 +27,12 @@ function onLoad(){
         guestNav.style.display = "none";
     }
     const logOutBtn = document.getElementById("logoutBtn");
-    logOutBtn.addEventListener("click", logOutFn)
+    logOutBtn.addEventListener("click", logOutFn);
     //console.log(userToken);
 }
 
 window.addEventListener('load', async () => {
+    // show recipes on page load
     const recipes = await loadRecepies();
     const navBar = document.querySelectorAll("nav a");
     onLoad();
@@ -62,14 +65,17 @@ function createRecipePreview (recipeName, src, id){
 async function getFullView(event){
     const target = event.currentTarget;
     const recipeId = target.id;
-    //console.log(recipeId);
+    //console.log(target);
     const moreInfoData = await getMoreInfo(recipeId);
 
 
     const fullViewArticle = createFullViewArticle(moreInfoData);
     
     //return fullViewArticle
-    target.replaceWith(fullViewArticle);
+    //target.replaceWith(fullViewArticle);
+    // show full view and hide the rest
+    const main = document.querySelector('main');
+    main.replaceChildren(fullViewArticle);
 };
 
 async function getMoreInfo(id){
@@ -77,11 +83,13 @@ async function getMoreInfo(id){
     let preparationArr = [];
     let imgSrc = '';
     let recipeName = '';
+    let ownerId = '';
     //console.log(`http://localhost:3030/data/recipes/${id}`);
     await fetch(`http://localhost:3030/data/recipes/${id}`)
     .then(responce => responce.json())
      .then(data => {
-         console.log(data);
+         //console.log(data);
+         ownerId = data._ownerId;
          imgSrc = data.img;
          ingredientsArr = data.ingredients;
          preparationArr = data.steps;
@@ -93,14 +101,17 @@ async function getMoreInfo(id){
         imgSrc,
         ingredientsArr,
         preparationArr,
+        ownerId,
     };
 };
 
 function createFullViewArticle(dataObj){
+    //console.log(dataObj);
     const title = dataObj.recipeName;
     const thumbSrc = dataObj.imgSrc;
     const ingredients = dataObj.ingredientsArr;
     const preparation = dataObj.preparationArr;
+    const ownerId = dataObj.ownerId;
 
     const fullViewArticle = document.createElement('article');
 
@@ -154,6 +165,28 @@ function createFullViewArticle(dataObj){
     fullViewArticle.appendChild(h2);
     fullViewArticle.appendChild(bandDiv);
     fullViewArticle.appendChild(descriptionDiv);
+
+    // Create and append Edit and Delete buttons
+    const accessToken = sessionStorage.getItem("accessToken");
+    const loggedUserId = sessionStorage.getItem("loggedUserId");
+    if (accessToken != null && loggedUserId == ownerId) {
+        const controlsDiv = document.createElement("div");
+        controlsDiv.className = "controls";
+    
+        const editBtn = document.createElement("button");
+        editBtn.textContent = "\u270E Edit";
+        
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "\u2716 Delete";
+        
+        // Add event listeners to the buttons 
+        editBtn.addEventListener("click", editRecipeFn);
+        deleteBtn.addEventListener("click", deleteRecipeFn);
+
+        controlsDiv.appendChild(editBtn);
+        controlsDiv.appendChild(deleteBtn);
+        fullViewArticle.appendChild(controlsDiv);
+    }
 
     return fullViewArticle;
 };
