@@ -78,7 +78,7 @@ async function getFullView(event){
     main.replaceChildren(fullViewArticle);
 };
 
-async function getMoreInfo(id){
+export async function getMoreInfo(id){
     let ingredientsArr = [];
     let preparationArr = [];
     let imgSrc = '';
@@ -107,7 +107,7 @@ async function getMoreInfo(id){
 };
 
 function createFullViewArticle(dataObj){
-    console.log(dataObj);
+    //console.log(dataObj);
     const title = dataObj.recipeName;
     const thumbSrc = dataObj.imgSrc;
     const ingredients = dataObj.ingredientsArr;
