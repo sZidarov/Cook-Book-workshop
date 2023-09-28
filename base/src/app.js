@@ -102,11 +102,12 @@ async function getMoreInfo(id){
         ingredientsArr,
         preparationArr,
         ownerId,
+        "recipeId": id,
     };
 };
 
 function createFullViewArticle(dataObj){
-    //console.log(dataObj);
+    console.log(dataObj);
     const title = dataObj.recipeName;
     const thumbSrc = dataObj.imgSrc;
     const ingredients = dataObj.ingredientsArr;
@@ -114,6 +115,7 @@ function createFullViewArticle(dataObj){
     const ownerId = dataObj.ownerId;
 
     const fullViewArticle = document.createElement('article');
+    fullViewArticle.id = dataObj.recipeId;
 
     const h2 = document.createElement('h2');
     h2.textContent = title;
@@ -190,8 +192,4 @@ function createFullViewArticle(dataObj){
 
     return fullViewArticle;
 };
-
-function createBtn(){
-    
-}
 
