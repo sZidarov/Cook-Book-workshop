@@ -20,16 +20,15 @@ export async function logInFn(event) {
     const url = "http://localhost:3030/users/login";
     main.replaceChildren(loginScreen);
     const loginForm = loginScreen.querySelector("article form");
-    //console.log(loginForm)
+    
     loginForm.addEventListener("submit", (event)=>{
         event.preventDefault();
         onSubmit();
-    })
-    //console.log(formData);
+    });
     
     async function onSubmit(){
         const formData = new FormData(loginForm);
-        console.log(loginForm)
+  
         try {
             if (formData.get("email") == "" || formData.get("password") == ""){
                 throw new Error("All fields must be filled!");

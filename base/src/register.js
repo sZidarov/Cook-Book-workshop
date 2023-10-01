@@ -41,9 +41,7 @@ export async function registerFn(event){
                 headers: {"Content-Type": "application/json"},
                 body,
             });
-            //console.log(request)
             const responce = await request.json();
-            console.log(responce);
             if(request.status !==  200){
                 throw new Error(responce.message);
             }

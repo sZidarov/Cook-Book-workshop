@@ -1,10 +1,12 @@
 import { createRecipeFn } from "./createRecipe.js";
 import { deleteRecipeFn, editRecipeFn } from "./editRecipe.js";
+import { loadHomePage } from "./homePage.js";
 import { logInFn } from "./login.js";
 import { logOutFn } from "./logout.js";
 import { registerFn } from "./register.js";
 
-export async function loadRecepies() {
+export async function loadRecepies(event) {
+
     //const responce = await fetch('http://localhost:3030/jsonstore/cookbook/recipes');
     const responce = await fetch('http://localhost:3030/data/recipes?select=_id%2Cname%2Cimg');
     const main = document.querySelector('main');
@@ -12,7 +14,9 @@ export async function loadRecepies() {
     
     main.replaceChildren();
     setUserNav();
-    document.querySelectorAll("header nav a")[0].classList.add("active")
+    if (event !== undefined){
+        navActiveStatus(event.target);
+    }
     
     for (const recipe in data) {
         //console.log(data[recipe]);
@@ -22,8 +26,16 @@ export async function loadRecepies() {
 
 function onLoad(){
     setUserNav();
+    loadHomePage();
+    
+    const homeLink = document.querySelector("header h1 a");
+    homeLink.addEventListener("click", loadHomePage);
+
     const catalogBtn = document.getElementById("catalogBtn");
-    catalogBtn.addEventListener("click", loadRecepies);
+    catalogBtn.addEventListener("click", (event)=>{
+        event.preventDefault();
+        loadRecepies(event);
+    });
 
     const loginBtn = document.getElementById("loginBtn");
     loginBtn.addEventListener("click", logInFn);
@@ -36,8 +48,8 @@ function onLoad(){
 
     const logOutBtn = document.getElementById("logoutBtn");
     logOutBtn.addEventListener("click", logOutFn);
-    //console.log(userToken);
 };
+onLoad();
 
 export function setUserNav(){
     const guestNav = document.getElementById("guest");
@@ -57,15 +69,18 @@ export function navActiveStatus (navElement){
         navBtn.classList.remove("active");
     }
     //console.log(navBtns);
-    navElement.classList.add("active");
+    if(navElement !== undefined){
+        navElement.classList.add("active");
+    };
 }
-
+/*
 window.addEventListener('load', async () => {
     // show recipes on page load
-    const recipes = await loadRecepies();
+    //const recipes = await loadRecepies();
     const navBar = document.querySelectorAll("nav a");
     onLoad();
 });
+*/
 
 function createRecipePreview (recipeName, src, id){
     const article = document.createElement('article');
@@ -91,7 +106,7 @@ function createRecipePreview (recipeName, src, id){
     article.appendChild(divImg);
     return article;   
 };
-async function getFullView(event){
+export async function getFullView(event){
     const target = event.currentTarget;
     const recipeId = target.id;
     //console.log(target);
