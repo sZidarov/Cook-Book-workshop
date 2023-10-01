@@ -1,13 +1,18 @@
+import { createRecipeFn } from "./createRecipe.js";
 import { deleteRecipeFn, editRecipeFn } from "./editRecipe.js";
+import { logInFn } from "./login.js";
 import { logOutFn } from "./logout.js";
+import { registerFn } from "./register.js";
 
-async function loadRecepies() {
+export async function loadRecepies() {
     //const responce = await fetch('http://localhost:3030/jsonstore/cookbook/recipes');
     const responce = await fetch('http://localhost:3030/data/recipes?select=_id%2Cname%2Cimg');
     const main = document.querySelector('main');
     const data = await responce.json();
     
     main.replaceChildren();
+    setUserNav();
+    document.querySelectorAll("header nav a")[0].classList.add("active")
     
     for (const recipe in data) {
         //console.log(data[recipe]);
@@ -16,6 +21,25 @@ async function loadRecepies() {
 };
 
 function onLoad(){
+    setUserNav();
+    const catalogBtn = document.getElementById("catalogBtn");
+    catalogBtn.addEventListener("click", loadRecepies);
+
+    const loginBtn = document.getElementById("loginBtn");
+    loginBtn.addEventListener("click", logInFn);
+
+    const registerBtn = document.getElementById("registerBtn");
+    registerBtn.addEventListener("click", registerFn);
+
+    const createBtn = document.getElementById("createBtn");
+    createBtn.addEventListener("click", createRecipeFn);
+
+    const logOutBtn = document.getElementById("logoutBtn");
+    logOutBtn.addEventListener("click", logOutFn);
+    //console.log(userToken);
+};
+
+export function setUserNav(){
     const guestNav = document.getElementById("guest");
     const userNav = document.getElementById("user")
     const userToken = sessionStorage.getItem("accessToken");
@@ -26,9 +50,14 @@ function onLoad(){
         userNav.style.display = "inline";
         guestNav.style.display = "none";
     }
-    const logOutBtn = document.getElementById("logoutBtn");
-    logOutBtn.addEventListener("click", logOutFn);
-    //console.log(userToken);
+};
+export function navActiveStatus (navElement){
+    const navBtns = document.querySelectorAll("header nav a");
+    for (const navBtn of navBtns) {
+        navBtn.classList.remove("active");
+    }
+    //console.log(navBtns);
+    navElement.classList.add("active");
 }
 
 window.addEventListener('load', async () => {
@@ -106,7 +135,7 @@ export async function getMoreInfo(id){
     };
 };
 
-function createFullViewArticle(dataObj){
+export function createFullViewArticle(dataObj){
     //console.log(dataObj);
     const title = dataObj.recipeName;
     const thumbSrc = dataObj.imgSrc;

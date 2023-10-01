@@ -1,28 +1,29 @@
-import { getMoreInfo } from "./app.js";
+import { createFullViewArticle, getMoreInfo } from "./app.js";
 
 const token = sessionStorage.accessToken;
 const main = document.querySelector('main');
 const url = 'http://localhost:3030/data/recipes/';
+const editScreen = document.getElementById("edit");
 
 export async function editRecipeFn(event){
     const target = event.target;
     const parentArticle = target.parentElement.parentElement;
     const articleId = parentArticle.id;
-    const editScreen = document.getElementById("edit");
     main.replaceChildren(editScreen);
     const dataObj = await getMoreInfo(articleId);
+    console.log(editScreen)
     editScreen.querySelector('[name="name"]').value = dataObj.recipeName;
     editScreen.querySelector('[name="img"]').value = dataObj.imgSrc;
     editScreen.querySelector('[name="ingredients"]').value = dataObj.ingredientsArr.join("\n");
     editScreen.querySelector('[name="steps"]').value = dataObj.preparationArr.join("\n");
+    //console.log(editForm);
     main.querySelector("form").addEventListener("submit", (ev)=>{
         ev.preventDefault();
-        const editForm = new FormData(ev.target);
-
+        onSubmit();
     })
-    console.log(dataObj);
-    // this is not good
+    
     async function onSubmit(){
+        const editForm = new FormData(editScreen.querySelector("article form"));
         const ingredients = editForm.get("ingredients").split("\n");
         const steps = editForm.get("steps").split("\n");
         
@@ -31,9 +32,7 @@ export async function editRecipeFn(event){
         "img": editForm.get("img"),
         ingredients,
         steps,
-        })
-        console.log(body);
-    
+        });
         try {
             const editUrl = url + articleId;
             const request = await fetch(editUrl, {
@@ -43,12 +42,19 @@ export async function editRecipeFn(event){
                     "X-Authorization": token,
                 },
                 body,
-            })
-        } catch (error) {
+            });
+            if (request.status !== 200){
+                throw new Error(request.message);
+            };
 
-        }
-    
-    }
+            const moreInfoData = await getMoreInfo(articleId);
+            const fullViewArticle = createFullViewArticle(moreInfoData); //dataObj
+            //const main = document.querySelector('main');
+            main.replaceChildren(fullViewArticle);
+        } catch (error) {
+            alert(error.message);
+        };
+    };
     
 }
 
