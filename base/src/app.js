@@ -3,6 +3,7 @@ import { deleteRecipeFn, editRecipeFn } from "./editRecipe.js";
 import { loadHomePage } from "./homePage.js";
 import { logInFn } from "./login.js";
 import { logOutFn } from "./logout.js";
+import { createHeaderAndFooter, getRecipesCount } from "./paging.js";
 import { registerFn } from "./register.js";
 
 export async function loadRecepies(event) {
@@ -11,17 +12,24 @@ export async function loadRecepies(event) {
     const responce = await fetch('http://localhost:3030/data/recipes?select=_id%2Cname%2Cimg');
     const main = document.querySelector('main');
     const data = await responce.json();
+    const recipesTotalCount = await getRecipesCount();
+    //let currentPage = 1;
     
     main.replaceChildren();
     setUserNav();
     if (event !== undefined){
         navActiveStatus(event.target);
     }
+    // add paging header
+    main.appendChild(createHeaderAndFooter(recipesTotalCount).header)
     
     for (const recipe in data) {
         //console.log(data[recipe]);
         main.appendChild(createRecipePreview(data[recipe].name ,data[recipe].img, data[recipe]._id))
-    };      
+    };
+    // add paging footer
+    main.appendChild(createHeaderAndFooter(recipesTotalCount).footer)
+    
 };
 
 function onLoad(){
