@@ -13,6 +13,10 @@ export async function getRecipesCount(){
     };
 };
 
+export async function createPage (){
+    
+}
+
 export function createHeaderAndFooter(pageCount){
     
     // here i have a problem !!!!!!
@@ -36,10 +40,12 @@ export function createHeaderAndFooter(pageCount){
     headerP.appendChild(headerText);
 
     const nextA = document.createElement("a");
+    nextA.id = "next";
     nextA.textContent = "Next>";
     nextA.href = "#";
   
     const prevA = document.createElement("a");
+    prevA.id = "prev";
     prevA.href = "#";
     prevA.textContent = "<Prev";
     if (page == 1 && pageOf > 1){
@@ -48,7 +54,7 @@ export function createHeaderAndFooter(pageCount){
         headerP.appendChild(prevA);
     }else if (page !== pageOf){
         headerP.appendChild(prevA);
-        const spacer = document.createTextNode(" ");
+        const spacer = document.createTextNode(" | ");
         headerP.appendChild(spacer);
         headerP.appendChild(nextA);
     };

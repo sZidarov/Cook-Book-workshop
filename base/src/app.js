@@ -7,16 +7,18 @@ import { createHeaderAndFooter, getRecipesCount } from "./paging.js";
 import { registerFn } from "./register.js";
 
 export async function loadRecepies(event) {
-
+    //let currentPage = document.querySelector("main header").dataset.page
+    let offset = 0
+    const url = `http://localhost:3030/data/recipes?select=_id%2Cname%2Cimg&offset=${offset}&pageSize=5`
     //const responce = await fetch('http://localhost:3030/jsonstore/cookbook/recipes');
-    const responce = await fetch('http://localhost:3030/data/recipes?select=_id%2Cname%2Cimg');
+    //const responce = await fetch('http://localhost:3030/data/recipes?select=_id%2Cname%2Cimg');
+    const responce = await fetch(url);
     const main = document.querySelector('main');
     const data = await responce.json();
     const recipesTotalCount = await getRecipesCount();
-    //let currentPage = 1;
     
     main.replaceChildren();
-    setUserNav();
+    setUserNav(); 
     if (event !== undefined){
         navActiveStatus(event.target);
     }
@@ -29,9 +31,20 @@ export async function loadRecepies(event) {
         main.appendChild(createRecipePreview(data[recipe].name ,data[recipe].img, data[recipe]._id))
     };
     // add paging footer
-    const footer = createHeaderAndFooter(recipesTotalCount).footer
+    const footer = createHeaderAndFooter(recipesTotalCount).footer;
     main.appendChild(footer);
     
+    //const nextBtn = document.getElementById("next");
+    //const prevBtn = document.getElementById("prev");
+    /*
+    nextBtn.addEventListener("click", ()=>{
+        //currentPage = document.querySelector("main header").dataset.page
+        console.log(currentPage)
+        //document.querySelector("main header").dataset.page = currentPage++;
+        loadRecepies()
+    })
+    prevBtn.addEventListener("click", ()=>console.log("previous page..."))
+    */
 };
 
 function onLoad(){
