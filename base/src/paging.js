@@ -15,24 +15,20 @@ export async function getRecipesCount(){
 };
 
 export async function createPage (page){
-    //if (page ===undefined){
-        //    page = 1
-        //};
+
     let offset = (page-1)*5;
 
-    const url = `http://localhost:3030/data/recipes?select=_id%2Cname%2Cimg&offset=${offset}&pageSize=5`
+    const url = `http://localhost:3030/data/recipes?select=_id%2Cname%2Cimg&offset=${offset}&pageSize=5`;
     const pageCount = await getRecipesCount();
     const pageOf = Math.ceil(pageCount/5);
     const request = await fetch(url);
     const data = await request.json();
     const main = document.querySelector("main");
-    //main.replaceChildren("");
 
     main.appendChild(createHeaderAndFooter(true, page, pageOf));
     
     for (const recipe in data) {
-        //console.log(data[recipe]);
-        main.appendChild(createRecipePreview(data[recipe].name ,data[recipe].img, data[recipe]._id))
+        main.appendChild(createRecipePreview(data[recipe].name ,data[recipe].img, data[recipe]._id));
     };
     
     main.appendChild(createHeaderAndFooter(false, page, pageOf));
@@ -48,14 +44,14 @@ export function createHeaderAndFooter(flag, page, pageOf){
     if(flag){
         type = "header";
     }else {
-        type = "footer"
-    }
+        type = "footer";
+    };
     
     const typer = document.createElement(type);
     typer.classList.add("section-title");
     typer.dataset.page = 1;
     
-    typer.appendChild(createParagraph())
+    typer.appendChild(createParagraph());
     
     function createParagraph (){
     const headerP = document.createElement("p");
@@ -92,9 +88,9 @@ export function createHeaderAndFooter(flag, page, pageOf){
 function nextPage (){
     document.getElementById("catalogBtn").dataset.page++;
     loadRecepies();
-}
+};
 
 function prevPage (){
     document.getElementById("catalogBtn").dataset.page--;
     loadRecepies();
-}
+};

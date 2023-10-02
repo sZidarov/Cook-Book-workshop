@@ -51,7 +51,7 @@ export async function logInFn(event) {
             sessionStorage.setItem("loggedUserId", userToken._id);
         } catch (error) {
             alert(error.message)
-        }
-    }
-}
+        };
+    };
+};
 

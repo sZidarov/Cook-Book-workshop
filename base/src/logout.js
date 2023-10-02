@@ -7,4 +7,4 @@ export async function logOutFn(event){
     sessionStorage.removeItem("accessToken");
     sessionStorage.removeItem("loggedUserId");
     loadRecepies();
-}
+};

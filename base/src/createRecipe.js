@@ -5,24 +5,15 @@ const createScreen = document.getElementById("create");
 createScreen.classList.add("notAttached");
 const newRecipeForm = createScreen.querySelector("article form");
 
-/*
-let newRecipeForm;
-window.addEventListener("load", ()=>{
-    newRecipeForm = document.querySelector("form");
-    newRecipeForm.addEventListener("submit", sendRecipe)
-})
-*/
-
 export async function createRecipeFn(event){
     event.preventDefault();
     navActiveStatus(event.target);
-    //console.log(event.target);
     main.replaceChildren(createScreen);
     newRecipeForm.removeEventListener("submit", onSubmit);
     if (createScreen.classList.contains("notAttached")){
         newRecipeForm.addEventListener("submit", onSubmit);
         createScreen.classList.remove("notAttached");
-    }
+    };
     
     function onSubmit (event){
         event.preventDefault();
@@ -32,10 +23,9 @@ export async function createRecipeFn(event){
         createScreen.classList.add("notAttached");
         event.stopPropagation();
         newRecipeForm.reset();
-    }
+    };
     
     async function sendRecipe (event){
-        //console.log("New recipe sent!")
         const formData = new FormData(newRecipeForm);
         const url = "http://localhost:3030/data/recipes";
         const ingredients = formData.get("ingredients").split("\n");
@@ -45,7 +35,7 @@ export async function createRecipeFn(event){
             "img": formData.get("img"),
             ingredients,
             steps,
-        })
+        });
     
         const request = await fetch(url, {
             method: "POST",
@@ -62,7 +52,7 @@ export async function createRecipeFn(event){
            loadRecepies(event);     
         } catch (error) {
             alert(error.message)
-        }
-    }
-}
+        };
+    };
+};
 

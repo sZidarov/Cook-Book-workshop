@@ -19,43 +19,19 @@ export async function loadRecepies(event) {
 
     //let currentPage = document.querySelector("main header").dataset.page
     /*
-    let offset = 0
-    const url = `http://localhost:3030/data/recipes?select=_id%2Cname%2Cimg&offset=${offset}&pageSize=5`
-    //const responce = await fetch('http://localhost:3030/jsonstore/cookbook/recipes');
-    //const responce = await fetch('http://localhost:3030/data/recipes?select=_id%2Cname%2Cimg');
+    const responce = await fetch('http://localhost:3030/data/recipes?select=_id%2Cname%2Cimg');
     const responce = await fetch(url);
     const main = document.querySelector('main');
     const data = await responce.json();
-    const recipesTotalCount = await getRecipesCount();
     
     main.replaceChildren();
     setUserNav(); 
     if (event !== undefined){
         navActiveStatus(event.target);
     }
-    // add paging header
-    const header = createHeaderAndFooter(recipesTotalCount).header
-    main.appendChild(header);
-    
     for (const recipe in data) {
-        //console.log(data[recipe]);
         main.appendChild(createRecipePreview(data[recipe].name ,data[recipe].img, data[recipe]._id))
     };
-    // add paging footer
-    const footer = createHeaderAndFooter(recipesTotalCount).footer;
-    main.appendChild(footer);
-    */
-    
-    //const nextBtn = document.getElementById("next");
-    //const prevBtn = document.getElementById("prev");
-    /*
-    nextBtn.addEventListener("click", ()=>{
-        //currentPage = document.querySelector("main header").dataset.page
-        console.log(currentPage)
-        //document.querySelector("main header").dataset.page = currentPage++;
-        loadRecepies()
-    })
-    prevBtn.addEventListener("click", ()=>console.log("previous page..."))
     */
 };
 
@@ -151,8 +127,6 @@ export async function getFullView(event){
 
     const fullViewArticle = createFullViewArticle(moreInfoData);
     
-    //return fullViewArticle
-    //target.replaceWith(fullViewArticle);
     // show full view and hide the rest
     const main = document.querySelector('main');
     main.replaceChildren(fullViewArticle);
@@ -164,17 +138,16 @@ export async function getMoreInfo(id){
     let imgSrc = '';
     let recipeName = '';
     let ownerId = '';
-    //console.log(`http://localhost:3030/data/recipes/${id}`);
     await fetch(`http://localhost:3030/data/recipes/${id}`)
     .then(responce => responce.json())
-     .then(data => {
+    .then(data => {
          //console.log(data);
          ownerId = data._ownerId;
          imgSrc = data.img;
          ingredientsArr = data.ingredients;
          preparationArr = data.steps;
          recipeName = data.name;
-     })
+     });
 
     return {
         recipeName,
@@ -187,7 +160,6 @@ export async function getMoreInfo(id){
 };
 
 export function createFullViewArticle(dataObj){
-    //console.log(dataObj);
     const title = dataObj.recipeName;
     const thumbSrc = dataObj.imgSrc;
     const ingredients = dataObj.ingredientsArr;
@@ -268,8 +240,7 @@ export function createFullViewArticle(dataObj){
         controlsDiv.appendChild(editBtn);
         controlsDiv.appendChild(deleteBtn);
         fullViewArticle.appendChild(controlsDiv);
-    }
-
+    };
     return fullViewArticle;
 };
 

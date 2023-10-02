@@ -11,7 +11,6 @@ export async function editRecipeFn(event){
     const articleId = parentArticle.id;
     main.replaceChildren(editScreen);
     const dataObj = await getMoreInfo(articleId);
-    console.log(editScreen)
     editScreen.querySelector('[name="name"]').value = dataObj.recipeName;
     editScreen.querySelector('[name="img"]').value = dataObj.imgSrc;
     editScreen.querySelector('[name="ingredients"]').value = dataObj.ingredientsArr.join("\n");
@@ -54,9 +53,8 @@ export async function editRecipeFn(event){
         } catch (error) {
             alert(error.message);
         };
-    };
-    
-}
+    };    
+};
 
 export async function deleteRecipeFn(event){
     const target = event.target;
@@ -77,13 +75,12 @@ export async function deleteRecipeFn(event){
             main.replaceChildren(createDeleteHeading());
         } catch (error) {
             alert(error.message);
-        }
-    }
-
-}
+        };
+    };
+};
 
 function createDeleteHeading(){
     const h2 = document.createElement("h2");
     h2.textContent = "Recipe deleted";
     return h2;
-}
+};

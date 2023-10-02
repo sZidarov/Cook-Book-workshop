@@ -3,17 +3,14 @@ import { getFullView, loadRecepies, navActiveStatus } from "./app.js";
 export async function loadHomePage(event){
     if (event !== undefined) {
         event.preventDefault();
-    }
+    };
     const main = document.querySelector("main");
     const homePageUrl = "http://localhost:3030/data/recipes?select=_id%2Cname%2Cimg&sortBy=_createdOn%20desc&pageSize=3";
     const request = await fetch(homePageUrl);
     const responce = await request.json();
     navActiveStatus();
-
     main.replaceChildren(createHomePage(responce));
-
-}
-
+};
 
 function createHomePage(recentRecipes) {
     const section = document.createElement("section");
