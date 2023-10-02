@@ -35,7 +35,7 @@ export async function createRecipeFn(event){
     }
     
     async function sendRecipe (event){
-        console.log("New recipe sent!")
+        //console.log("New recipe sent!")
         const formData = new FormData(newRecipeForm);
         const url = "http://localhost:3030/data/recipes";
         const ingredients = formData.get("ingredients").split("\n");

@@ -3,11 +3,22 @@ import { deleteRecipeFn, editRecipeFn } from "./editRecipe.js";
 import { loadHomePage } from "./homePage.js";
 import { logInFn } from "./login.js";
 import { logOutFn } from "./logout.js";
-import { createHeaderAndFooter, getRecipesCount } from "./paging.js";
+import { createHeaderAndFooter, createPage, getRecipesCount } from "./paging.js";
 import { registerFn } from "./register.js";
 
 export async function loadRecepies(event) {
+    const page = document.getElementById("catalogBtn").dataset.page;
+    const main = document.querySelector('main');
+    main.replaceChildren();
+    createPage(page);
+    setUserNav();
+    if (event !== undefined){
+        navActiveStatus(event.target);
+    }
+    
+
     //let currentPage = document.querySelector("main header").dataset.page
+    /*
     let offset = 0
     const url = `http://localhost:3030/data/recipes?select=_id%2Cname%2Cimg&offset=${offset}&pageSize=5`
     //const responce = await fetch('http://localhost:3030/jsonstore/cookbook/recipes');
@@ -33,6 +44,7 @@ export async function loadRecepies(event) {
     // add paging footer
     const footer = createHeaderAndFooter(recipesTotalCount).footer;
     main.appendChild(footer);
+    */
     
     //const nextBtn = document.getElementById("next");
     //const prevBtn = document.getElementById("prev");
@@ -57,6 +69,7 @@ function onLoad(){
     const catalogBtn = document.getElementById("catalogBtn");
     catalogBtn.addEventListener("click", (event)=>{
         event.preventDefault();
+        event.target.dataset.page=1;
         loadRecepies(event);
     });
 
@@ -105,7 +118,7 @@ window.addEventListener('load', async () => {
 });
 */
 
-function createRecipePreview (recipeName, src, id){
+export function createRecipePreview (recipeName, src, id){
     const article = document.createElement('article');
     article.classList.add('preview');
     article.id = id;

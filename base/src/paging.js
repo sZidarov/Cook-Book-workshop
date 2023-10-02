@@ -1,3 +1,4 @@
+import { createRecipePreview, loadRecepies } from "./app.js";
 
 export async function getRecipesCount(){
     const countUrl = "http://localhost:3030/data/recipes?count";
@@ -13,26 +14,48 @@ export async function getRecipesCount(){
     };
 };
 
-export async function createPage (){
-    
-}
+export async function createPage (page){
+    //if (page ===undefined){
+        //    page = 1
+        //};
+    let offset = (page-1)*5;
 
-export function createHeaderAndFooter(pageCount){
-    
-    // here i have a problem !!!!!!
-    
-    let page = 1;
-    
-    //const pageOf = 1;
+    const url = `http://localhost:3030/data/recipes?select=_id%2Cname%2Cimg&offset=${offset}&pageSize=5`
+    const pageCount = await getRecipesCount();
     const pageOf = Math.ceil(pageCount/5);
-    const header = document.createElement("header");
-    header.classList.add("section-title");
-    header.dataset.page = page;
-    const footer = document.createElement("footer");
-    footer.classList.add("section-title");
-    header.dataset.page = page;
-    header.appendChild(createParagraph());
-    footer.appendChild(createParagraph())
+    const request = await fetch(url);
+    const data = await request.json();
+    const main = document.querySelector("main");
+    //main.replaceChildren("");
+
+    main.appendChild(createHeaderAndFooter(true, page, pageOf));
+    
+    for (const recipe in data) {
+        //console.log(data[recipe]);
+        main.appendChild(createRecipePreview(data[recipe].name ,data[recipe].img, data[recipe]._id))
+    };
+    
+    main.appendChild(createHeaderAndFooter(false, page, pageOf));
+    
+};
+
+export function createHeaderAndFooter(flag, page, pageOf){
+
+    // if the flag is true the function will return a header
+    // if the flag is false the function will return a footer
+    
+    let type;
+    if(flag){
+        type = "header";
+    }else {
+        type = "footer"
+    }
+    
+    const typer = document.createElement(type);
+    typer.classList.add("section-title");
+    typer.dataset.page = 1;
+    
+    typer.appendChild(createParagraph())
     
     function createParagraph (){
     const headerP = document.createElement("p");
@@ -40,19 +63,22 @@ export function createHeaderAndFooter(pageCount){
     headerP.appendChild(headerText);
 
     const nextA = document.createElement("a");
+    nextA.addEventListener("click", nextPage)
     nextA.id = "next";
-    nextA.textContent = "Next>";
+    nextA.textContent = "Next >";
     nextA.href = "#";
   
     const prevA = document.createElement("a");
+    prevA.addEventListener("click", prevPage)
     prevA.id = "prev";
     prevA.href = "#";
-    prevA.textContent = "<Prev";
+    prevA.textContent = "< Prev";
+    
     if (page == 1 && pageOf > 1){
         headerP.appendChild(nextA);
     }else if (page == pageOf && page > 1){
         headerP.appendChild(prevA);
-    }else if (page !== pageOf){
+    }else if (page != pageOf){
         headerP.appendChild(prevA);
         const spacer = document.createTextNode(" | ");
         headerP.appendChild(spacer);
@@ -60,10 +86,15 @@ export function createHeaderAndFooter(pageCount){
     };
     return headerP;
     };
-    
+    return typer;
+};
 
-    return {
-        header,
-        footer
-    };
+function nextPage (){
+    document.getElementById("catalogBtn").dataset.page++;
+    loadRecepies();
+}
+
+function prevPage (){
+    document.getElementById("catalogBtn").dataset.page--;
+    loadRecepies();
 }
