@@ -13,16 +13,11 @@ export async function getRecipesCount(){
     };
 };
 
-export function createHeaderAndFooter(pageCount, currentPage){
+export function createHeaderAndFooter(pageCount){
     
     // here i have a problem !!!!!!
     
-    let page;
-    if(currentPage !== undefined){
-        page = currentPage;
-    }else{
-        page = 1
-    }
+    let page = 1;
     
     //const pageOf = 1;
     const pageOf = Math.ceil(pageCount/5);
@@ -43,13 +38,7 @@ export function createHeaderAndFooter(pageCount, currentPage){
     const nextA = document.createElement("a");
     nextA.textContent = "Next>";
     nextA.href = "#";
-    nextA.addEventListener("click", (event)=>{
-        event.preventDefault();
-        parent = event.target.parentElement.parentElement ;
-        parent.dataset.page ++;
-        page = parent.dataset.page;
-        createHeaderAndFooter(pageCount, page);
-    })
+  
     const prevA = document.createElement("a");
     prevA.href = "#";
     prevA.textContent = "<Prev";

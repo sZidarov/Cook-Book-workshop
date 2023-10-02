@@ -21,14 +21,16 @@ export async function loadRecepies(event) {
         navActiveStatus(event.target);
     }
     // add paging header
-    main.appendChild(createHeaderAndFooter(recipesTotalCount).header)
+    const header = createHeaderAndFooter(recipesTotalCount).header
+    main.appendChild(header);
     
     for (const recipe in data) {
         //console.log(data[recipe]);
         main.appendChild(createRecipePreview(data[recipe].name ,data[recipe].img, data[recipe]._id))
     };
     // add paging footer
-    main.appendChild(createHeaderAndFooter(recipesTotalCount).footer)
+    const footer = createHeaderAndFooter(recipesTotalCount).footer
+    main.appendChild(footer);
     
 };
 
